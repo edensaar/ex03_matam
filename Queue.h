@@ -12,7 +12,7 @@ class Queue{
         Node(Node& Node);
         ~Node() = default;
     };
-
+    struct EmptyQueue{};
 
 public:
     Node* first;
@@ -32,8 +32,6 @@ public:
     struct ConstIterator;
     ConstIterator begin() const;
     ConstIterator end() const;
-
-
 };
 
 template <class T, class F>
@@ -53,7 +51,7 @@ Queue<T>::Queue() {
 }
 template <class T>
 Queue<T>::Queue(const Queue& queue){
-//try and except
+//try and except - if there is a prob with allocation
 
     this->first = new Node();
     this->last = this->first;
@@ -101,15 +99,16 @@ void Queue<T>::pushBack(T value) {
 }
 template <class T>
 T Queue<T>::front() {
-    if(this->index >= 0)
-    {
-        return this->first->next->data;
+    if(this->index <0){
+        throw EmptyQueue();
     }
+        return this->first->next->data;
 }
 template <class T>
 void Queue<T>::popFront() {
-    //TODO check if not null
-
+    if(this->index <0){
+        throw EmptyQueue();
+    }
     if(this->index > 0)
     {
         Node* n = this->first->next;
@@ -118,7 +117,6 @@ void Queue<T>::popFront() {
     }
     else
     {
-        if(this->index == 0)
         {
             Node* n = this->first;
             this->first = new Node();
@@ -138,13 +136,11 @@ int Queue<T>::size()
 template <class T, class F>
 Queue<T> filter(Queue<T>& queue , F function)
 {
-    //TODO - it doenst work!!
     Queue<T> new_queue;
     for(typename Queue<T>::Iterator it = queue.begin(); it != queue.end(); ++it){
         if(function(*it)){
             new_queue.pushBack(*it);
         }
-
     }
     return new_queue;
 }
@@ -152,13 +148,9 @@ Queue<T> filter(Queue<T>& queue , F function)
 template <typename T, class F>
 void transform(Queue<T>& queue , F function)
 {
-    //TODO - it doenst work!!
-
     for(typename Queue<T>::Iterator it = queue.begin(); it != queue.end(); ++it){
         *it = function(*it);
-
     }
-
 }
 
 template <typename T, class F>
@@ -176,12 +168,11 @@ template <class T>
 struct Queue<T>::Iterator{
     Node* current;
     Iterator(Node* node);
-
-public:
     ~Iterator() = default;
     T& operator*();
     Iterator& operator++();
     bool operator != (const Iterator& iterator) const;
+    struct InvalidOperation{};
 };
 template <class T>
 Queue<T>::Iterator::Iterator(Queue::Node *node) {
@@ -200,15 +191,16 @@ typename  Queue<T>::Iterator Queue<T>::end(){
 }
 template <class T>
 T& Queue<T>::Iterator::operator*() {
-//error
+    if(this->current == nullptr){
+        throw InvalidOperation();
+    }
     return this->current->data;
 }
 template <class T>
 typename Queue<T>::Iterator& Queue<T>::Iterator::operator++(){
-//    if(NULL)
-//    {
-    //exception
-//    }
+    if(this->current == nullptr){
+        throw InvalidOperation();
+    }
     this->current = this->current->next;
     return *this;
 }
@@ -227,6 +219,7 @@ struct Queue<T>::ConstIterator{
     const T& operator*() const;
      ConstIterator& operator++() ;
     bool operator != (const ConstIterator& iterator) const;
+    struct InvalidOperation{};
 
 };
 template<class T>
@@ -236,10 +229,16 @@ Queue<T>::ConstIterator::ConstIterator(Queue::Node *node) {
 
 template<class T>
 const T& Queue<T>::ConstIterator::operator*() const{
+    if(this->current == nullptr){
+        throw InvalidOperation();
+    }
     return this->current->data;
 }
 template<class T>
 typename Queue<T>::ConstIterator& Queue<T>::ConstIterator::operator++()  {
+    if(this->current == nullptr){
+        throw InvalidOperation();
+    }
     this->current = this->current->next;
     return *this;
 }
@@ -254,7 +253,6 @@ typename  Queue<T>::ConstIterator Queue<T>::begin() const{
 }
 template <class T>
 typename  Queue<T>::ConstIterator Queue<T>::end() const{
-//error
     return nullptr;
 }
 
