@@ -36,24 +36,31 @@ public:
 
 template <class T, class F>
 Queue<T> filter(Queue<T>& queue , F function);
-
 template <typename T, class F>
 void transform(Queue<T>& queue , F function);
-
 template <typename T, class F>
 int reduce(Queue<T>& queue ,int first, F function);
-
 template <class T>
 Queue<T>::Queue() {
-    this->first = new Node();
+    try{
+        this->first = new Node();
+    }
+    //TODO - do i need to add something?
+    catch (std::bad_alloc& e){
+        throw(e);
+    }
     this->last = this->first;
     this->index = -1;
 }
 template <class T>
 Queue<T>::Queue(const Queue& queue){
 //try and except - if there is a prob with allocation
-
-    this->first = new Node();
+    try{
+        this->first = new Node();
+    }
+    catch (std::bad_alloc& e){
+        throw(e);
+    }
     this->last = this->first;
 
     for (typename Queue<T>::ConstIterator it = queue.begin(); it != queue.end(); ++it){
@@ -91,9 +98,15 @@ void Queue<T>::pushBack(T value) {
     }
     else
     {
-        Node* new_node = new Node(value);
-        this->last->next = new_node;
-        this->last = new_node;
+        try{
+            Node* new_node = new Node(value);
+            this->last->next = new_node;
+            this->last = new_node;
+        }
+        catch (std::bad_alloc& e){
+            throw(e);
+        }
+
     }
     this->index++;
 }
@@ -119,7 +132,12 @@ void Queue<T>::popFront() {
     {
         {
             Node* n = this->first;
-            this->first = new Node();
+            try{
+                this->first = new Node();
+            }
+            catch (std::bad_alloc& e){
+                throw(e);
+            }
             this->last = this->first;
             delete n;
         }
