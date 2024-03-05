@@ -254,10 +254,7 @@ typename  Queue<T>::ConstIterator Queue<T>::begin() const{
 }
 template <class T>
 typename  Queue<T>::ConstIterator Queue<T>::end() const{
-//    if(NULL)
-//    {
-//        error
-//    }
+//error
     return nullptr;
 }
 
