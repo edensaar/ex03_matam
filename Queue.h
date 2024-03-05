@@ -12,7 +12,7 @@ class Queue{
         Node(Node& Node);
         ~Node() = default;
     };
-    struct EmptyQueue{};
+
 
 public:
     Node* first;
@@ -22,7 +22,7 @@ public:
     Queue(const Queue& queue);
     ~Queue();
 
-    T front();
+    T& front();
     void pushBack(T value);
     void popFront();
     int size();
@@ -32,6 +32,7 @@ public:
     struct ConstIterator;
     ConstIterator begin() const;
     ConstIterator end() const;
+    struct EmptyQueue{};
 };
 
 template <class T, class F>
@@ -61,6 +62,7 @@ Queue<T>::Queue(const Queue& queue){
     catch (std::bad_alloc& e){
         throw(e);
     }
+    this->index = -1;
     this->last = this->first;
 
     for (typename Queue<T>::ConstIterator it = queue.begin(); it != queue.end(); ++it){
@@ -78,7 +80,6 @@ Queue<T>::~Queue(){
         delete n;
         this->index--;
     }
-
 };
 template <class T>
 Queue<T>::Node::Node(T data){
@@ -111,12 +112,13 @@ void Queue<T>::pushBack(T value) {
     this->index++;
 }
 template <class T>
-T Queue<T>::front() {
+T& Queue<T>::front() {
     if(this->index <0){
         throw EmptyQueue();
     }
-        return this->first->next->data;
+        return this->first->data;
 }
+
 template <class T>
 void Queue<T>::popFront() {
     if(this->index <0){
@@ -124,8 +126,8 @@ void Queue<T>::popFront() {
     }
     if(this->index > 0)
     {
-        Node* n = this->first->next;
-        this->first->next = n->next;
+        Node* n = this->first;
+        this->first = this->first->next;
         delete n;
     }
     else
