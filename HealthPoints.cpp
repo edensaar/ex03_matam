@@ -1,6 +1,4 @@
-//
-// Created by EDEN on 04/03/2024.
-//
+
 #include "HealthPoints.h"
 
 HealthPoints::HealthPoints(int hp, int maxHP ) {
@@ -17,7 +15,7 @@ HealthPoints::HealthPoints(int hp, int maxHP ) {
 
 
 
-HealthPoints& HealthPoints::operator+(const int add) {
+HealthPoints& HealthPoints::operator+=(const int add) {
     if(this->hp + add > this->maxHP){
         this->hp = this->maxHP;
     }
@@ -27,13 +25,19 @@ HealthPoints& HealthPoints::operator+(const int add) {
     return *this;
 }
 
-HealthPoints& HealthPoints::operator+=(const int add) {
+HealthPoints& HealthPoints::operator+(const int add) {
    HealthPoints result(*this);
-   return result + add;
+   if(result.hp + add > result.maxHP){
+       result.hp = result.maxHP
+   }
+   else{
+       result.hp += add;
+   }
+   return result;
 }
 
 
-HealthPoints& HealthPoints::operator-(const int subs) {
+HealthPoints& HealthPoints::operator-=(const int subs) {
     if(this->hp - subs < 0){
         this->hp = 0;
     }
@@ -43,9 +47,15 @@ HealthPoints& HealthPoints::operator-(const int subs) {
     return *this;
 }
 
-HealthPoints& HealthPoints::operator-=(const int subs) {
+HealthPoints& HealthPoints::operator-(const int subs) {
     HealthPoints result(*this);
-    return result - subs;
+    if(result.hp - subs < 0){
+        result.hp = 0;
+    }
+    else{
+        result.hp -= subs;
+    }
+    return result;
 }
 
 
@@ -103,3 +113,9 @@ bool operator!=(const HealthPoints& healthPoints1, const HealthPoints& healthPoi
     }
     return true;
 }
+
+std::ostream& operator<<(std::ostream& os, const HealthPoints& healthPoints){
+    os << healthPoints.hp << "(" << healthPoints.maxHP << ")";
+    return os;
+}
+

@@ -6,16 +6,16 @@
 #define UNTITLED4_HEALTHPOINTS_H
 
 #endif //UNTITLED4_HEALTHPOINTS_H
+#include "iostream"
 
 class NegHp {};
 
 class HealthPoints{
 
-private:
-    int hp;
-    int maxHP;
 
 public:
+    int hp;
+    int maxHP;
     HealthPoints(int hp = 100, int maxHP = 100);
 
     HealthPoints(const HealthPoints& healthPoints) = default;
@@ -31,10 +31,11 @@ public:
 
     friend bool operator==(const HealthPoints& healthPoints1, const HealthPoints& healthPoints2);
     friend bool operator<(const HealthPoints& healthPoints1, const HealthPoints& healthPoints2);
-
+    friend std::ostream& operator<<(std::ostream& os, const HealthPoints& healthPoints);
 };
 
 bool operator>(const HealthPoints& healthPoints1, const HealthPoints& healthPoints2);
 bool operator>=(const HealthPoints& healthPoints1, const HealthPoints& healthPoints2);
 bool operator<=(const HealthPoints& healthPoints1, const HealthPoints& healthPoints2);
 bool operator==(const HealthPoints& healthPoints1, const HealthPoints& healthPoints2);
+
