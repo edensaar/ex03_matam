@@ -1,4 +1,13 @@
 //
+// Created by EDEN on 07/03/2024.
+//
+
+#ifndef UNTITLED4_HEALTHPOINTS_H
+#define UNTITLED4_HEALTHPOINTS_H
+
+#endif //UNTITLED4_HEALTHPOINTS_H
+
+//
 // Created by EDEN on 04/03/2024.
 //
 
@@ -40,4 +49,3 @@ bool operator>(const HealthPoints& healthPoints1, const HealthPoints& healthPoin
 bool operator>=(const HealthPoints& healthPoints1, const HealthPoints& healthPoints2);
 bool operator<=(const HealthPoints& healthPoints1, const HealthPoints& healthPoints2);
 bool operator==(const HealthPoints& healthPoints1, const HealthPoints& healthPoints2);
-
