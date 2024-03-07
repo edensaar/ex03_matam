@@ -23,9 +23,10 @@ public:
     ~Queue();
 
     T& front();
+    T& front() const;
     void pushBack(T value);
     void popFront();
-    int size();
+    int size()const;
     struct Iterator;
     Iterator begin();
     Iterator end();
@@ -36,17 +37,17 @@ public:
 };
 
 template <class T, class F>
-Queue<T> filter(Queue<T>& queue , F function);
+Queue<T> filter(const Queue<T>& queue , F function);
 template <typename T, class F>
 void transform(Queue<T>& queue , F function);
 template <typename T, class F>
-int reduce(Queue<T>& queue ,int first, F function);
+T reduce(const Queue<T>& queue ,T first, F function);
 template <class T>
 Queue<T>::Queue() {
     try{
         this->first = new Node();
     }
-    //TODO - do i need to add something?
+        //TODO - do i need to add something?
     catch (std::bad_alloc& e){
         throw(e);
     }
@@ -116,9 +117,15 @@ T& Queue<T>::front() {
     if(this->index <0){
         throw EmptyQueue();
     }
-        return this->first->data;
+    return this->first->data;
 }
-
+template <class T>
+T& Queue<T>::front() const{
+    if(this->index <0){
+        throw EmptyQueue();
+    }
+    return this->first->data;
+}
 template <class T>
 void Queue<T>::popFront() {
     if(this->index <0){
@@ -148,16 +155,16 @@ void Queue<T>::popFront() {
     return;
 }
 template <class T>
-int Queue<T>::size()
+int Queue<T>::size()const
 {
     return this->index + 1;
 }
 
 template <class T, class F>
-Queue<T> filter(Queue<T>& queue , F function)
+Queue<T> filter(const Queue<T>& queue , F function)
 {
     Queue<T> new_queue;
-    for(typename Queue<T>::Iterator it = queue.begin(); it != queue.end(); ++it){
+    for(typename Queue<T>::ConstIterator it = queue.begin(); it != queue.end(); ++it){
         if(function(*it)){
             new_queue.pushBack(*it);
         }
@@ -174,10 +181,10 @@ void transform(Queue<T>& queue , F function)
 }
 
 template <typename T, class F>
-int reduce(Queue<T>& queue ,int first, F function)
+T reduce(const Queue<T>& queue ,T first, F function)
 {
-    int final = first;
-    for(typename Queue<T>::Iterator it = queue.begin(); it != queue.end(); ++it){
+    T final = first;
+    for(typename Queue<T>::ConstIterator it = queue.begin(); it != queue.end(); ++it){
         final = function(final , *it);
     }
     return final;
@@ -237,7 +244,7 @@ struct Queue<T>::ConstIterator{
     ConstIterator(Node* node);
     ~ConstIterator() = default;
     const T& operator*() const;
-     ConstIterator& operator++() ;
+    ConstIterator& operator++() ;
     bool operator != (const ConstIterator& iterator) const;
     struct InvalidOperation{};
 
