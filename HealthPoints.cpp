@@ -4,17 +4,13 @@
 
 HealthPoints::HealthPoints(int hp, int maxHP ) {
     if(hp <= 0){
-        throw NegHp();
+        throw InvalidArgument();
     }
     else{
         this->hp = hp;
         this->maxHP = hp;
     }
 }
-
-
-
-
 
 HealthPoints& HealthPoints::operator+=(const int add) {
     if(this->hp + add > this->maxHP){
@@ -81,10 +77,6 @@ HealthPoints operator-(const HealthPoints& obj, const int subs) {
 }
 
 
-
-
-
-
 bool operator==(const HealthPoints& healthPoints1, const HealthPoints& healthPoints2){
     if(healthPoints1.hp == healthPoints2.hp){
         return true;
@@ -98,13 +90,6 @@ bool operator<(const HealthPoints& healthPoints1, const HealthPoints& healthPoin
         }
     return false;
 }
-
-
-
-
-
-
-
 
 bool operator<=(const HealthPoints& healthPoints1, const HealthPoints& healthPoints2){
     if(healthPoints1 < healthPoints2 || healthPoints1 == healthPoints2){
@@ -150,8 +135,8 @@ int main(){
     healthPoints2 = healthPoints2 - 160; // now has 0 points out of 150 //
     healthPoints2 = 160 + healthPoints1; // healthPoints2 now has 100 out of 100,
 //healthPoints1 is unchanged //
-    //std::cout << healthPoints2 <<std::endl;
-   // std::cout << healthPoints1 << ", " << healthPoints2;
+    std::cout << healthPoints2 <<std::endl;
+    std::cout << healthPoints1 << ", " << healthPoints2;
 
     bool comparisonResult;
     HealthPoints healthPoints3(100);
