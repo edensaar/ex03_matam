@@ -40,7 +40,9 @@ public:
 
 
     friend bool operator==(const HealthPoints& healthPoints1, const HealthPoints& healthPoints2);
+    friend bool operator!=(const HealthPoints& healthPoints1, const HealthPoints& healthPoints2);
     friend bool operator<(const HealthPoints& healthPoints1, const HealthPoints& healthPoints2);
+    friend bool operator>(const HealthPoints& healthPoints1, const HealthPoints& healthPoints2);
     friend std::ostream& operator<<(std::ostream& os, const HealthPoints& healthPoints);
     class InvalidArgument{};
 };

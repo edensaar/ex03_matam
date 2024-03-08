@@ -7,8 +7,7 @@ class Queue{
     {
         T data;
         Node* next;
-        Node(T data);
-        Node();
+        Node(const T& data , Node* next = nullptr): data(data) , next(next){};
         Node(Node& Node);
         ~Node() = default;
     };
@@ -45,7 +44,7 @@ T reduce(const Queue<T>& queue ,T first, F function);
 template <class T>
 Queue<T>::Queue() {
     try{
-        this->first = new Node();
+        this->first = nullptr;
     }
         //TODO - do i need to add something?
     catch (std::bad_alloc& e){
@@ -58,7 +57,7 @@ template <class T>
 Queue<T>::Queue(const Queue& queue){
 //try and except - if there is a prob with allocation
     try{
-        this->first = new Node();
+        this->first = nullptr;
     }
     catch (std::bad_alloc& e){
         throw(e);
@@ -73,30 +72,21 @@ Queue<T>::Queue(const Queue& queue){
 
 }
 template <class T>
-Queue<T>::~Queue(){
-    while(this->index >= 0)
-    {
-        Node* n = this->first;
+Queue<T>::~Queue() {
+    while (this->index >= 0) {
+        Node *n = this->first;
         this->first = this->first->next;
         delete n;
         this->index--;
     }
-};
-template <class T>
-Queue<T>::Node::Node(T data){
-    this->data = data;
-    this->next = nullptr;
-}
-template <class T>
-Queue<T>::Node::Node(){
-    this->data = 0;
-    this->next = nullptr;
 }
 template <class T>
 void Queue<T>::pushBack(T value) {
+    // TODO - add bad alloc
     if(this->index < 0)
     {
-        this->first->data = value;
+        this->first = new Node(value);
+        this->last = this->first;
     }
     else
     {
@@ -141,12 +131,8 @@ void Queue<T>::popFront() {
     {
         {
             Node* n = this->first;
-            try{
-                this->first = new Node();
-            }
-            catch (std::bad_alloc& e){
-                throw(e);
-            }
+
+            this->first = nullptr;
             this->last = this->first;
             delete n;
         }
@@ -282,6 +268,8 @@ template <class T>
 typename  Queue<T>::ConstIterator Queue<T>::end() const{
     return nullptr;
 }
+
+
 
 
 
