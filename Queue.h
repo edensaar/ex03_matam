@@ -20,7 +20,7 @@ public:
     Queue();
     Queue(const Queue& queue);
     ~Queue();
-
+    Queue<T>& operator=(const Queue&);
     T& front();
     T& front() const;
     void pushBack(T value);
@@ -78,6 +78,19 @@ Queue<T>::~Queue() {
         this->first = this->first->next;
         delete n;
         this->index--;
+    }
+}
+template <class T>
+Queue<T>& Queue<T>::operator=(const Queue<T>& queue){
+    if(this == &queue){
+        return *this;
+    }
+    else
+    {
+        for(const T& data: queue){
+            this->pushBack(data);
+        }
+        return *this;
     }
 }
 template <class T>
