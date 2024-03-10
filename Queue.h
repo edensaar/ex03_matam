@@ -10,9 +10,9 @@ class Queue{
         Node(const T& data , Node* next = nullptr): data(data) , next(next){};
         Node(Node& Node);
         ~Node() = default;
+
+
     };
-
-
 public:
     Node* first;
     Node* last;
@@ -32,11 +32,13 @@ public:
     struct ConstIterator;
     ConstIterator begin() const;
     ConstIterator end() const;
+    void deletelist(Node *node);
     struct EmptyQueue{};
 };
 
 template <class T, class F>
 Queue<T> filter(const Queue<T>& queue , F function);
+
 template <typename T, class F>
 void transform(Queue<T>& queue , F function);
 template <typename T, class F>
@@ -52,6 +54,18 @@ Queue<T>::Queue() {
     }
     this->last = this->first;
     this->index = -1;
+}
+template <class T>
+void Queue<T>::deletelist(Node *node){
+    if(node == nullptr){
+        return;
+    }
+    while(node->next != nullptr){
+        Node* n = node;
+        node = node->next;
+        delete n;
+    }
+    delete node;
 }
 template <class T>
 Queue<T>::Queue(const Queue& queue){
@@ -82,24 +96,60 @@ Queue<T>::~Queue() {
 }
 template <class T>
 Queue<T>& Queue<T>::operator=(const Queue<T>& queue){
+
     if(this == &queue){
         return *this;
     }
     else
     {
-        for(const T& data: queue){
-            this->pushBack(data);
+        Node* temp_first;
+        Node* temp_last ;
+        int i = -1;
+        try{
+            for(const T& data: queue){
+                if(i == -1){
+                    temp_first  = new Node(data);
+                    temp_last = temp_first;
+                    i++;
+                }
+                else{
+                    Node* newnode = new Node(data);
+                    temp_last->next = newnode;
+                    temp_last = newnode;
+                    i++;
+                }
+            }
         }
-        return *this;
+        catch(...){
+            deletelist(temp_first);
+            throw;
+        }
+        Node* todelete = this->first;
+        this->first = temp_first;
+        this->last = temp_last;
+        this->index = i;
+        deletelist(todelete);
+
+
     }
+    return *this;
 }
+
 template <class T>
 void Queue<T>::pushBack(T value) {
     // TODO - add bad alloc
     if(this->index < 0)
     {
-        this->first = new Node(value);
-        this->last = this->first;
+        try
+        {
+            this->first = new Node(value);
+            this->last = this->first;
+        }
+        catch (std::bad_alloc& e){
+
+            throw(e);
+        }
+
     }
     else
     {
@@ -111,7 +161,6 @@ void Queue<T>::pushBack(T value) {
         catch (std::bad_alloc& e){
             throw(e);
         }
-
     }
     this->index++;
 }
