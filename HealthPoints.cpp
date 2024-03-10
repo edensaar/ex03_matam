@@ -21,19 +21,34 @@ HealthPoints& HealthPoints::operator+=(const int add) {
         this->hp = this->maxHP;
     }
     else{
-        this->hp += add;
+        if(this->hp +add <0){
+            this->hp = 0;
+        }
+        else{
+            this->hp += add;
+        }
+
     }
     return *this;
 }
 
 HealthPoints operator+(const int add, const HealthPoints& obj) {
     HealthPoints result = obj;
+    cout << "in + " <<endl;
     if(result.hp + add > result.maxHP){
         result.hp = result.maxHP;
     }
     else{
-        result.hp += add;
+        cout <<obj << "ce oncore moi" << endl;
+        if(result.hp + add < 0){
+
+            return 0;
+        }
+        else{
+            result.hp += add;
+        }
     }
+
     return result;
 }
 
@@ -43,13 +58,20 @@ HealthPoints operator+(const HealthPoints& obj, const int add) {
         result.hp = result.maxHP;
     }
     else{
-        result.hp += add;
+        if(result.hp + add < 0){
+            result = 0;
+        }
+        else{
+            result.hp += add;
+        }
+
     }
     return result;
 }
 
 HealthPoints& HealthPoints::operator-=(const int subs) {
     if(this->hp - subs < 0){
+        cout << "salut" << endl;
         this->hp = 0;
     }
     else{
@@ -127,11 +149,10 @@ std::ostream& operator<<(std::ostream& os, const HealthPoints& healthPoints){
     os << healthPoints.hp << "(" << healthPoints.maxHP << ")";
     return os;
 }
-
-int main(){
-    HealthPoints healthPoints1; /* has 100 points out of 100 */
-    HealthPoints healthPoints2(150);
-    if(healthPoints2 == healthPoints1){
-        cout << "sarah is the best" << endl;
-    }
-}
+//
+//int main(){
+//    HealthPoints healthPoints1; /* has 100 points out of 100 */
+//    HealthPoints healthPoints2(150);
+//    healthPoints1 = healthPoints2 + (-1025);
+//
+//}
