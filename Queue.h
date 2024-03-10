@@ -38,7 +38,6 @@ public:
 
 template <class T, class F>
 Queue<T> filter(const Queue<T>& queue , F function);
-
 template <typename T, class F>
 void transform(Queue<T>& queue , F function);
 template <typename T, class F>
@@ -80,7 +79,14 @@ Queue<T>::Queue(const Queue& queue){
     this->last = this->first;
 
     for (typename Queue<T>::ConstIterator it = queue.begin(); it != queue.end(); ++it){
-        this->pushBack(*it);
+        try{
+            this->pushBack(*it);
+        }
+        catch(std::bad_alloc& e){
+            deletelist(this->first);
+            throw e;
+        }
+
     }
     this->index = queue.index;
 
@@ -140,27 +146,27 @@ void Queue<T>::pushBack(T value) {
     // TODO - add bad alloc
     if(this->index < 0)
     {
-        try
-        {
+//        try
+//        {
             this->first = new Node(value);
             this->last = this->first;
-        }
-        catch (std::bad_alloc& e){
-
-            throw(e);
-        }
+//        }
+//        catch (std::bad_alloc& e){
+//
+//            throw(e);
+//        }
 
     }
     else
     {
-        try{
+//        try{
             Node* new_node = new Node(value);
             this->last->next = new_node;
             this->last = new_node;
-        }
-        catch (std::bad_alloc& e){
-            throw(e);
-        }
+//        }
+//        catch (std::bad_alloc& e){
+//            throw(e);
+//        }
     }
     this->index++;
 }
@@ -214,7 +220,7 @@ Queue<T> filter(const Queue<T>& queue , F function)
     Queue<T> new_queue;
     for(typename Queue<T>::ConstIterator it = queue.begin(); it != queue.end(); ++it){
         if(function(*it)){
-            new_queue.pushBack(*it);
+                new_queue.pushBack(*it);
         }
     }
     return new_queue;
