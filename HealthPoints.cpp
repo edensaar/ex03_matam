@@ -34,15 +34,13 @@ HealthPoints& HealthPoints::operator+=(const int add) {
 
 HealthPoints operator+(const int add, const HealthPoints& obj) {
     HealthPoints result = obj;
-    cout << "in + " <<endl;
     if(result.hp + add > result.maxHP){
         result.hp = result.maxHP;
     }
     else{
-        cout <<obj << "ce oncore moi" << endl;
         if(result.hp + add < 0){
 
-            return 0;
+            result.hp =  0;
         }
         else{
             result.hp += add;
@@ -59,7 +57,7 @@ HealthPoints operator+(const HealthPoints& obj, const int add) {
     }
     else{
         if(result.hp + add < 0){
-            result = 0;
+            result.hp = 0;
         }
         else{
             result.hp += add;
@@ -71,11 +69,18 @@ HealthPoints operator+(const HealthPoints& obj, const int add) {
 
 HealthPoints& HealthPoints::operator-=(const int subs) {
     if(this->hp - subs < 0){
-        cout << "salut" << endl;
         this->hp = 0;
     }
     else{
-        this->hp -= subs;
+        if(this->hp - subs <= this->maxHP){
+            this->hp -= subs;
+        }
+        else{
+            if(this->hp - subs > this->maxHP){
+                this->hp = this->maxHP;
+            }
+        }
+
     }
     return *this;
 }
@@ -86,7 +91,13 @@ HealthPoints operator-(const int subs, const HealthPoints& obj) {
         result.hp = 0;
     }
     else{
-        result.hp -= subs;
+//        result.hp -= subs;
+        if(result.hp - subs >= result.maxHP ){
+            result.hp = result.maxHP;
+        }
+        else{
+            result.hp = result.hp - subs;
+        }
     }
     return result;
 }
@@ -97,7 +108,13 @@ HealthPoints operator-(const HealthPoints& obj, const int subs) {
         result.hp = 0;
     }
     else{
-        result.hp -= subs;
+//        result.hp -= subs;
+    if(result.hp - subs >= result.maxHP ){
+        result.hp = result.maxHP;
+    }
+    else{
+        result.hp = result.hp - subs;
+    }
     }
     return result;
 }
@@ -152,7 +169,8 @@ std::ostream& operator<<(std::ostream& os, const HealthPoints& healthPoints){
 //
 //int main(){
 //    HealthPoints healthPoints1; /* has 100 points out of 100 */
-//    HealthPoints healthPoints2(150);
-//    healthPoints1 = healthPoints2 + (-1025);
-//
+//    HealthPoints healthPoints2(80085);
+//    healthPoints1 = healthPoints2 + (-80085);
+//    healthPoints1 -= (-80086);
+//    return 0;
 //}
