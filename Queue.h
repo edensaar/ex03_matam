@@ -10,8 +10,6 @@ class Queue{
         Node(const T& data , Node* next = nullptr): data(data) , next(next){};
         Node(Node& Node);
         ~Node() = default;
-
-
     };
 public:
     Node* first;
@@ -33,6 +31,7 @@ public:
     ConstIterator begin() const;
     ConstIterator end() const;
     void deletelist(Node *node);
+    void deletelist();
     struct EmptyQueue{};
 };
 
@@ -67,6 +66,15 @@ void Queue<T>::deletelist(Node *node){
     delete node;
 }
 template <class T>
+void Queue<T>::deletelist(){
+    while (this->index >= 0) {
+        Node *n = this->first;
+        this->first = this->first->next;
+        delete n;
+        this->index--;
+    }
+}
+template <class T>
 Queue<T>::Queue(const Queue& queue){
 //try and except - if there is a prob with allocation
     try{
@@ -86,7 +94,6 @@ Queue<T>::Queue(const Queue& queue){
             deletelist(this->first);
             throw e;
         }
-
     }
     this->index = queue.index;
 
@@ -146,27 +153,14 @@ void Queue<T>::pushBack(T value) {
     // TODO - add bad alloc
     if(this->index < 0)
     {
-//        try
-//        {
             this->first = new Node(value);
             this->last = this->first;
-//        }
-//        catch (std::bad_alloc& e){
-//
-//            throw(e);
-//        }
-
     }
     else
     {
-//        try{
             Node* new_node = new Node(value);
             this->last->next = new_node;
             this->last = new_node;
-//        }
-//        catch (std::bad_alloc& e){
-//            throw(e);
-//        }
     }
     this->index++;
 }
@@ -218,9 +212,17 @@ template <class T, class F>
 Queue<T> filter(const Queue<T>& queue , F function)
 {
     Queue<T> new_queue;
-    for(typename Queue<T>::ConstIterator it = queue.begin(); it != queue.end(); ++it){
-        if(function(*it)){
+    for(typename Queue<T>::ConstIterator it = queue.begin(); it != queue.end(); ++it) {
+        if (function(*it)) {
+            try{
                 new_queue.pushBack(*it);
+            }
+            catch (std::bad_alloc& e){
+            new_queue.deletelist();
+            throw e;
+            }
+//            new_queue.pushBack(*it);
+
         }
     }
     return new_queue;
@@ -234,10 +236,10 @@ void transform(Queue<T>& queue , F function)
     }
 }
 
-template <typename T, class F>
-T reduce(const Queue<T>& queue ,T first, F function)
+template <typename T, typename S, class F>
+S reduce(const Queue<T>& queue ,S first, F function)
 {
-    T final = first;
+    S final = first;
     for(typename Queue<T>::ConstIterator it = queue.begin(); it != queue.end(); ++it){
         final = function(final , *it);
     }
