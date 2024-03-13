@@ -39,8 +39,8 @@ template <class T, class F>
 Queue<T> filter(const Queue<T>& queue , F function);
 template <typename T, class F>
 void transform(Queue<T>& queue , F function);
-template <typename T, class F>
-T reduce(const Queue<T>& queue ,T first, F function);
+template <typename T, typename S, class F>
+S reduce(const Queue<T>& queue ,S first, F function);
 template <class T>
 Queue<T>::Queue() {
     try{
@@ -76,7 +76,6 @@ void Queue<T>::deletelist(){
 }
 template <class T>
 Queue<T>::Queue(const Queue& queue){
-//try and except - if there is a prob with allocation
     try{
         this->first = nullptr;
     }
